@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
+   integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+   crossorigin=""/>
+   <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
+   integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+   crossorigin=""></script>
+   <link rel="stylesheet" href="animate.min.css">
+     <link rel='stylesheet' href='/stylesheets/index-style.css' />
+</head>
+
+<body>
+    <div class="header">
+      || Bienvenue, <span class="col-6 en-tete"><%=userName%> ||</span>
+      <button type="button" class="notifications btn btn-outline-light">
+        Nombre de villes <span class="badge badge-light"><%=cityList.length%></span>
+      </button>
+    </div>
+
+
+  <div class="container-fluid text-center">
+    <div class="row">
+
+      <div class="offset-lg-6 col-12">
+        <form method="post" action="/add-city" class="form-inline">
+          <div class="form-group mb-2 mx-sm-3">
+            <span>Ville</span>
+            <input type="text" class="form-control" name="city" placeholder="Paris, Lyon ..">
+          </div>
+          <button type="submit" class="btn btn-info">Enregistrer</button>
+        </form>
+      </div>
+
+
+    <div class="col-12 col-lg-6">
+      <div id="mapid">
+
+      </div>
+    </div>
+
+
+      <div class="col-12 col-lg-6">
+        <ul class="list-group">
+          <%
+          var color;
+      for(var i =0; i<cityList.length; i++){
+        if(cityList[i].min <= 12){
+           color="froid";
+       }else if (cityList[i].min > 12 && cityList[i].max <=20 ){
+           color="moyen";
+       }else if (cityList[i].max > 20 ){
+           color="chaud";
+       }else{
+           color="";
+       }
+        %>
+          <li class=" <%=color%> list-group-item">
+            <div class="animated shake delay-4s row">
+              <span class="col-2"><a href="https://fr.wikipedia.org/wiki/<%=cityList[i].name%>">
+                <%=cityList[i].name%></a></span>
+              <span class="offset-1 col-1"><img class="picto1" src="<%=cityList[i].picto%>" alt=""></span>
+              <span class="col-1">
+                <%=cityList[i].temps%></span>
+              <span class=" offset-1 col-1 badge badge-pill badge-secondary">
+                <%=cityList[i].min%>°</span>
+              <span class="col-1 badge badge-pill badge-warning">
+                <%=cityList[i].max%>°</span>
+              <div class="offset-3 col-1">
+                <a href="/delete?indice=<%=i%>"><i class="far fa-times-circle"></i></a>
+              </div>
+            </div>
+          </li>
+          <%
+              }
+                %>
+        </ul>
+      </div>
+
+
+    </div>
+  </div>
+
+  <script>
+    var mymap = L.map('mapid').setView([48.856613, 2.352222], 6);
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoid2Fzc2ltYSIsImEiOiJjam1yeDdzNmIyNXg3M3FsYm15MHh1enhsIn0.xuGge_JARIDAhRfCLw7Ufg', {
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox.streets',
+    accessToken: 'pk.eyJ1Ijoid2Fzc2ltYSIsImEiOiJjam1yeDdzNmIyNXg3M3FsYm15MHh1enhsIn0.xuGge_JARIDAhRfCLw7Ufg'
+  }).addTo(mymap);
+  L.marker([50.5, 30.5]).addTo(mymap);
+  </script>
+
+</body>
+
+</html>
